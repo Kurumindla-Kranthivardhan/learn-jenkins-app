@@ -20,13 +20,24 @@ pipeline {
                 '''
             }
         }
+
         stage('Test') {
-            success()
-            steps{
+            steps {
                 sh '''
-                echo Test
-                test -f build/index.html'''
+                    echo "Running tests..."
+                    test -f build/index.html
+                    npm test
+                '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and tests completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed. Check logs for details.'
         }
     }
 }
