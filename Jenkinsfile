@@ -1,9 +1,23 @@
 pipeline {
-    agent { docker { image 'python:3.14.0-alpine3.22' } }
+    agent any
+
     stages {
-        stage('build') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'python --version'
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
             }
         }
     }
